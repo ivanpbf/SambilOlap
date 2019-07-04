@@ -9,7 +9,7 @@ import datetime
 import numpy as np
 import json
 
-myConnection = psycopg2.connect(host = 'localhost', user= 'postgres',password ='pass123', dbname= 'Proyecto1BD') #estos son los mios
+conAccesos = psycopg2.connect(host = 'localhost', user= 'postgres',password ='pass123', dbname= 'SambilAccesos')
 
 def on_connect(client, userdata, flags, rc):
 	print('connected')
@@ -19,7 +19,7 @@ def main():
 	client.on_connect = on_connect
 	client.qos = 0 			
 	client.connect(host='localhost')
-	cur = myConnection.cursor()
+	cur = conAccesos.cursor()
 
 	start_dt = datetime.date.today().replace(day=1, month=1).toordinal()
 	end_dt = datetime.date.today().toordinal()
@@ -107,7 +107,7 @@ def main():
 			if(entroTienda > 0.5):
 				for j in range(int(np.random.uniform(1,11))):
 					idTienda = int(np.random.uniform(1,11))
-					dateEntrada = auxHoraultima + datetime.timedelta(hours=np.random.uniform(int(np.random.uniform(auxHoraultima.hour)),18), minutes=np.random.uniform(auxHoraultima.minute,60), seconds=np.random.uniform(0,60))
+					dateEntrada = auxHoraultima + datetime.timedelta(hours=np.random.uniform(int(np.random.uniform(auxHoraultima.hour)),1), minutes=np.random.uniform(auxHoraultima.minute,60), seconds=np.random.uniform(0,60))
 					dateSalida = dateEntrada + datetime.timedelta(minutes=np.random.uniform(2,31))
 					auxHoraultima = dateSalida
 					payloadT = {
@@ -140,7 +140,7 @@ def main():
 			fueFeria = np.random.rand()
 			if(fueFeria > 0.5):
 				idmesa = int(np.random.uniform(1,11))
-				fechaOcupada = auxHoraultima + datetime.timedelta(hours=np.random.uniform(int(np.random.uniform(auxHoraultima.hour)),18), minutes=np.random.uniform(auxHoraultima.minute,60), seconds=np.random.uniform(0,60))
+				fechaOcupada = auxHoraultima + datetime.timedelta(hours=np.random.uniform(int(np.random.uniform(auxHoraultima.hour)),1), minutes=np.random.uniform(auxHoraultima.minute,60), seconds=np.random.uniform(0,60))
 				fechaDesocupada = fechaOcupada + datetime.timedelta(minutes=np.random.uniform(2,60))
 				auxHoraultima = fechaDesocupada
 
