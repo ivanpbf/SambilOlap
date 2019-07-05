@@ -129,19 +129,22 @@ def main():
 					compro = np.random.rand()
 					if(compro > 0.4):
 						monto = int(np.random.uniform(1,1000))
+						fechacompra = dateEntrada.date()
 						if tieneMAC == True:
 							payloadV = {
 								"monto": monto,
 								"idtienda": idTienda,
 								"cedula": cedula,
-								"mac": mac
+								"mac": mac,
+								"fecha": str(fechacompra)
 							}
 							client.publish('Sambil/venta',json.dumps(payloadV), qos=0)
 						else:
 							payloadV = {
 								"monto": monto,
 								"idtienda": idTienda,
-								"cedula": cedula
+								"cedula": cedula,
+								"fecha": str(fechacompra)
 							}
 							client.publish('Sambil/venta',json.dumps(payloadV), qos=0)
 			

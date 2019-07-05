@@ -36,9 +36,9 @@ def insertarTorniquete(t):
 def insertarVenta(v):
     cur = conVentas.cursor()
     if v.get('mac') is None:
-        cur.execute("INSERT INTO venta (monto, idtienda, cedula) VALUES (%s,%s,%s);", (v["monto"], v["idtienda"], v["cedula"])) #INSERTAR EN LA TABLA venta
+        cur.execute("INSERT INTO venta (monto, idtienda, cedula, fecha) VALUES (%s,%s,%s,%s);", (v["monto"], v["idtienda"], v["cedula"], v["fecha"])) #INSERTAR EN LA TABLA venta
     else:
-        cur.execute("INSERT INTO venta (monto, idtienda, cedula, mac) VALUES (%s,%s,%s,%s);", (v["monto"], v["idtienda"], v["cedula"], v["mac"])) #INSERTAR EN LA TABLA venta
+        cur.execute("INSERT INTO venta (monto, idtienda, cedula, mac, fecha) VALUES (%s,%s,%s,%s,%s);", (v["monto"], v["idtienda"], v["cedula"], v["mac"], v["fecha"])) #INSERTAR EN LA TABLA venta
     conVentas.commit()
 
 def insertarMesa(m):
