@@ -110,12 +110,21 @@ def main():
 					dateEntrada = auxHoraultima + datetime.timedelta(hours=np.random.uniform(int(np.random.uniform(auxHoraultima.hour)),1), minutes=np.random.uniform(auxHoraultima.minute,60), seconds=np.random.uniform(0,60))
 					dateSalida = dateEntrada + datetime.timedelta(minutes=np.random.uniform(2,31))
 					auxHoraultima = dateSalida
-					payloadT = {
-						"idtienda": idTienda,
-						"hentrada": str(dateEntrada),
-						"hsalida": str(dateSalida)
-					}
-					client.publish('Sambil/torniquete',json.dumps(payloadT), qos=0)
+					if tieneMAC == True:
+						payloadT = {
+							"idtienda": idTienda,
+							"hentrada": str(dateEntrada),
+							"hsalida": str(dateSalida),
+							"mac": mac
+						}
+						client.publish('Sambil/torniquete',json.dumps(payloadT), qos=0)
+					else:
+						payloadT = {
+							"idtienda": idTienda,
+							"hentrada": str(dateEntrada),
+							"hsalida": str(dateSalida)
+						}
+						client.publish('Sambil/torniquete',json.dumps(payloadT), qos=0)					
 
 					compro = np.random.rand()
 					if(compro > 0.4):

@@ -27,7 +27,10 @@ def insertarUsuario(u):
 
 def insertarTorniquete(t):
     cur = conAccesos.cursor()
-    cur.execute("INSERT INTO torniquete (idtienda, hentrada, hsalida) VALUES (%s,%s,%s);", (t["idtienda"],t["hentrada"], t["hsalida"])) #INSERTAR EN LA TABLA torniquete
+    if t.get('mac') is None:
+        cur.execute("INSERT INTO torniquete (idtienda, hentrada, hsalida) VALUES (%s,%s,%s);", (t["idtienda"],t["hentrada"], t["hsalida"])) #INSERTAR EN LA TABLA torniquete
+    else:
+        cur.execute("INSERT INTO torniquete (idtienda, hentrada, hsalida, mac) VALUES (%s,%s,%s, %s);", (t["idtienda"],t["hentrada"], t["hsalida"], t["mac"])) #INSERTAR EN LA TABLA torniquete
     conAccesos.commit()
 
 def insertarVenta(v):
