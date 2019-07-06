@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>etlventas</name>
+    <name>etlmesas</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -460,7 +460,7 @@
     <server>localhost</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>SambilVentas</database>
+    <database>SambilMesas</database>
     <port>5432</port>
     <username>postgres</username>
     <password>Encrypted 2be98afc86aa7f2e4cb09af63cdc3fd89</password>
@@ -469,8 +469,40 @@
     <index_tablespace/>
     <attributes>
       <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
         <code>PORT_NUMBER</code>
         <attribute>5432</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -486,7 +518,7 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>OLTP Ventas</from>
+      <from>OLTPMesas</from>
       <to>Merge join</to>
       <enabled>Y</enabled>
     </hop>
@@ -496,6 +528,40 @@
       <enabled>Y</enabled>
     </hop>
   </order>
+  <step>
+    <name>Merge join</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>LEFT OUTER</join_type>
+    <step1>OLTPMesas</step1>
+    <step2>OLTP Accesos</step2>
+    <keys_1>
+      <key>mac</key>
+    </keys_1>
+    <keys_2>
+      <key>mac</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>192</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>Microsoft Excel output</name>
     <type>ExcelOutput</type>
@@ -513,7 +579,7 @@
     <append>N</append>
     <add_to_result_filenames>Y</add_to_result_filenames>
     <file>
-      <name>C:\Users\Ivan\Desktop\admin bdd\SambilOlap\SambilOlap\ventas</name>
+      <name>C:\Users\Ivan\Desktop\admin bdd\SambilOlap\SambilOlap\mesas</name>
       <extention>xls</extention>
       <do_not_open_newfile_init>N</do_not_open_newfile_init>
       <create_parent_folder>N</create_parent_folder>
@@ -538,6 +604,11 @@
     </template>
     <fields>
       <field>
+        <name>nmesa</name>
+        <type>Integer</type>
+        <format>0</format>
+      </field>
+      <field>
         <name>cedula</name>
         <type>Integer</type>
         <format>0</format>
@@ -548,37 +619,12 @@
         <format>0</format>
       </field>
       <field>
-        <name>edad</name>
-        <type>Integer</type>
-        <format>0</format>
+        <name>fechaocupada</name>
+        <type>Date</type>
+        <format>d-MMM-yy</format>
       </field>
       <field>
-        <name>sexo</name>
-        <type>String</type>
-        <format>#</format>
-      </field>
-      <field>
-        <name>nombre</name>
-        <type>String</type>
-        <format>#</format>
-      </field>
-      <field>
-        <name>catalogo</name>
-        <type>String</type>
-        <format>#</format>
-      </field>
-      <field>
-        <name>monto</name>
-        <type>Integer</type>
-        <format>0</format>
-      </field>
-      <field>
-        <name>descuento</name>
-        <type>Integer</type>
-        <format>0</format>
-      </field>
-      <field>
-        <name>fecha</name>
+        <name>fechadesocupada</name>
         <type>Date</type>
         <format>d-MMM-yy</format>
       </field>
@@ -609,7 +655,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>464</xloc>
+      <xloc>480</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
@@ -626,11 +672,9 @@
       <schema_name/>
     </partitioning>
     <connection>labadmin</connection>
-    <sql>SELECT acceso.cedula, usuario.mac, rasgos.edad, rasgos.sexo, torniquete.idtienda
-FROM rasgos INNER JOIN acceso
-ON acceso.cedula = rasgos.cedula LEFT JOIN usuario
-ON rasgos.cedula = usuario.cedula LEFT JOIN torniquete
-ON usuario.mac = torniquete.mac</sql>
+    <sql>SELECT rasgos.cedula, usuario.mac, rasgos.sexo, rasgos.edad
+FROM rasgos LEFT JOIN usuario
+ON rasgos.cedula = usuario.cedula</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -645,13 +689,13 @@ ON usuario.mac = torniquete.mac</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
+      <xloc>112</xloc>
       <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>OLTP Ventas</name>
+    <name>OLTPMesas</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -662,10 +706,7 @@ ON usuario.mac = torniquete.mac</sql>
       <schema_name/>
     </partitioning>
     <connection>labadmin2</connection>
-    <sql>SELECT tienda.idtienda, tienda.nombre, tienda.catalogo,
-venta.monto, venta.cedula, venta.mac, venta.descuento, venta.fecha
-FROM tienda INNER JOIN venta
-ON tienda.idtienda = venta.idtienda</sql>
+    <sql>SELECT nmesa, mac, fechaocupada, fechadesocupada FROM mesa</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -680,7 +721,7 @@ ON tienda.idtienda = venta.idtienda</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
+      <xloc>80</xloc>
       <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
@@ -698,39 +739,23 @@ ON tienda.idtienda = venta.idtienda</sql>
     </partitioning>
     <fields>
       <field>
-        <name>cedula_1</name>
-        <rename>cedula</rename>
-      </field>
-      <field>
-        <name>mac_1</name>
-        <rename>mac</rename>
-      </field>
-      <field>
-        <name>edad</name>
+        <name>nmesa</name>
         <rename/>
       </field>
       <field>
-        <name>sexo</name>
+        <name>cedula</name>
         <rename/>
       </field>
       <field>
-        <name>nombre</name>
+        <name>mac</name>
         <rename/>
       </field>
       <field>
-        <name>catalogo</name>
+        <name>fechaocupada</name>
         <rename/>
       </field>
       <field>
-        <name>monto</name>
-        <rename/>
-      </field>
-      <field>
-        <name>descuento</name>
-        <rename/>
-      </field>
-      <field>
-        <name>fecha</name>
+        <name>fechadesocupada</name>
         <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
@@ -746,40 +771,6 @@ ON tienda.idtienda = venta.idtienda</sql>
     <GUI>
       <xloc>336</xloc>
       <yloc>208</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Merge join</name>
-    <type>MergeJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <join_type>RIGHT OUTER</join_type>
-    <step1>OLTP Accesos</step1>
-    <step2>OLTP Ventas</step2>
-    <keys_1>
-      <key>cedula</key>
-    </keys_1>
-    <keys_2>
-      <key>cedula</key>
-    </keys_2>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>224</xloc>
-      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
