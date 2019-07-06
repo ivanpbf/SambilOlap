@@ -485,7 +485,7 @@
     <add_to_result_filenames>Y</add_to_result_filenames>
     <file>
       <name>C:\Users\Ivan\Desktop\admin bdd\SambilOlap\SambilOlap\accesos</name>
-      <extention>csv</extention>
+      <extention>xls</extention>
       <do_not_open_newfile_init>N</do_not_open_newfile_init>
       <create_parent_folder>N</create_parent_folder>
       <split>N</split>
@@ -625,27 +625,21 @@ ON rasgos.cedula = usuario.cedula</sql>
     <fields>
       <field>
         <name>cedula</name>
-        <rename/>
       </field>
       <field>
         <name>mac</name>
-        <rename/>
       </field>
       <field>
         <name>sexo</name>
-        <rename/>
       </field>
       <field>
         <name>edad</name>
-        <rename/>
       </field>
       <field>
         <name>entrada</name>
-        <rename/>
       </field>
       <field>
         <name>salida</name>
-        <rename/>
       </field>
       <field>
         <name>horaacceso</name>
