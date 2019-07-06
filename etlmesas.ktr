@@ -513,55 +513,31 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>OLTP Accesos</from>
-      <to>Merge join</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>OLTPMesas</from>
-      <to>Merge join</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Merge join</from>
       <to>Select values</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>OLTPMesas</from>
+      <to>Sort rows 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>OLTP Accesos</from>
+      <to>Sort rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort rows 2</from>
+      <to>Merge join</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort rows</from>
+      <to>Merge join</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
-  <step>
-    <name>Merge join</name>
-    <type>MergeJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <join_type>LEFT OUTER</join_type>
-    <step1>OLTPMesas</step1>
-    <step2>OLTP Accesos</step2>
-    <keys_1>
-      <key>mac</key>
-    </keys_1>
-    <keys_2>
-      <key>mac</key>
-    </keys_2>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>224</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>Microsoft Excel output</name>
     <type>ExcelOutput</type>
@@ -580,7 +556,7 @@
     <add_to_result_filenames>Y</add_to_result_filenames>
     <file>
       <name>C:\Users\Ivan\Desktop\admin bdd\SambilOlap\SambilOlap\mesas</name>
-      <extention>xls</extention>
+      <extention>csv</extention>
       <do_not_open_newfile_init>N</do_not_open_newfile_init>
       <create_parent_folder>N</create_parent_folder>
       <split>N</split>
@@ -604,7 +580,7 @@
     </template>
     <fields>
       <field>
-        <name>nmesa</name>
+        <name>mac</name>
         <type>Integer</type>
         <format>0</format>
       </field>
@@ -614,7 +590,17 @@
         <format>0</format>
       </field>
       <field>
-        <name>mac</name>
+        <name>sexo</name>
+        <type>String</type>
+        <format>#</format>
+      </field>
+      <field>
+        <name>edad</name>
+        <type>Integer</type>
+        <format>0</format>
+      </field>
+      <field>
+        <name>nmesa</name>
         <type>Integer</type>
         <format>0</format>
       </field>
@@ -672,9 +658,8 @@
       <schema_name/>
     </partitioning>
     <connection>labadmin</connection>
-    <sql>SELECT rasgos.cedula, usuario.mac, rasgos.sexo, rasgos.edad
-FROM rasgos LEFT JOIN usuario
-ON rasgos.cedula = usuario.cedula</sql>
+    <sql>SELECT usuario.mac,usuario.cedula, rasgos.sexo, rasgos.edad FROM
+usuario INNER JOIN rasgos ON usuario.cedula = rasgos.cedula</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -689,8 +674,8 @@ ON rasgos.cedula = usuario.cedula</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>128</yloc>
+      <xloc>48</xloc>
+      <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -706,7 +691,7 @@ ON rasgos.cedula = usuario.cedula</sql>
       <schema_name/>
     </partitioning>
     <connection>labadmin2</connection>
-    <sql>SELECT nmesa, mac, fechaocupada, fechadesocupada FROM mesa</sql>
+    <sql>SELECT mesa.mac, mesa.nmesa, mesa.fechaocupada, mesa.fechadesocupada FROM mesa</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -721,8 +706,8 @@ ON rasgos.cedula = usuario.cedula</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>80</xloc>
-      <yloc>256</yloc>
+      <xloc>48</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -739,7 +724,7 @@ ON rasgos.cedula = usuario.cedula</sql>
     </partitioning>
     <fields>
       <field>
-        <name>nmesa</name>
+        <name>mac</name>
         <rename/>
       </field>
       <field>
@@ -747,7 +732,15 @@ ON rasgos.cedula = usuario.cedula</sql>
         <rename/>
       </field>
       <field>
-        <name>mac</name>
+        <name>sexo</name>
+        <rename/>
+      </field>
+      <field>
+        <name>edad</name>
+        <rename/>
+      </field>
+      <field>
+        <name>nmesa</name>
         <rename/>
       </field>
       <field>
@@ -771,6 +764,172 @@ ON rasgos.cedula = usuario.cedula</sql>
     <GUI>
       <xloc>336</xloc>
       <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Merge join</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>RIGHT OUTER</join_type>
+    <step1>Sort rows</step1>
+    <step2>Sort rows 2</step2>
+    <keys_1>
+      <key>mac</key>
+    </keys_1>
+    <keys_2>
+      <key>mac</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Sort rows</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>mac</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>cedula</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>sexo</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>edad</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Sort rows 2</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>mac</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>nmesa</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>fechaocupada</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>fechadesocupada</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
